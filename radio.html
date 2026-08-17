@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 通讯记录</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>频道 <b class="amber">VHF-备用</b></span>
+  <span>信号 <b class="bad">中断</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>通讯记录</h1>
+  <p class="sub">无线电日志 · 与麦克默多站的最后联络 · <span class="red">部分报文已加密</span></p>
+
+  <div class="panel">
+    <div class="panel-title">VHF 频道日志</div>
+    <div class="log">
+      <div><span class="ts">[21:14]</span>奥库斯站呼叫麦克默多站，信号正常。</div>
+      <div><span class="ts">[21:30]</span>收到气象更新：暴风雪预计持续 48 小时。</div>
+      <div><span class="ts">[22:02]</span>麦克默多站：请确认人员状态。</div>
+      <div><span class="ts">[22:15]</span>奥库斯站：<span class="amber">A·科瓦奇未返回。重复，未返回。</span></div>
+      <div><span class="ts">[22:40]</span>频道切换至备用频率。</div>
+      <div><span class="ts">[23:03]</span>收到加密报文：<span class="cyan">SHUVRQQHO</span></div>
+      <div><span class="ts">[23:11]</span>报文重复：<span class="cyan">SHUVRQQHO SHUVRQQHO</span></div>
+      <div><span class="ts">[23:59]</span><span class="red">通讯中断。</span></div>
+    </div>
+    <div class="hint">值班员在日志边缘潦草地写了一个「-3」。</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">报文解密器</div>
+    <div class="log" style="margin-bottom:14px;">
+      <div class="dim">拖动偏移量，直到密文变成有意义的单词。（凯撒密码）</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="dim">偏移</span>
+      <input type="range" id="shift" min="-25" max="25" value="0" style="width:220px;">
+      <span class="cyan" id="shiftVal" style="min-width:40px;">0</span>
+    </div>
+    <p style="margin-top:14px;">
+      <span class="dim">密文：</span><span class="cyan">SHUVRQQHO</span>
+      <span class="dim" style="margin-left:20px;">明文：</span><span class="green big" id="plain" style="font-size:18px;">SHUVRQQHO</span>
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">档案残片</div>
+    <div class="big">残片 #2：<span class="red">R</span></div>
+    <div class="dim" style="margin-top:6px;">解密后的单词，指向下一站。</div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">值班员在日志边缘写了个「-3」。</div>
+    <div class="hint-text" data-level="2">这是凯撒密码：把密文每个字母往前挪 3 位（偏移 -3）。</div>
+    <div class="hint-text" data-level="3">SHUVRQQHO → PERSONNEL。去 /personnel.html。残片 #2 = R。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · radio log</span>
+    <span class="faint">channel: BACKUP</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("凯撒，-3。SHUVRQQHO。");
+  collectShard("R"); // 残片 #2
+  const cipher = "SHUVRQQHO";
+  function caesar(s, shift) {
+    return s.split("").map(function (c) {
+      if (/[A-Z]/.test(c)) return String.fromCharCode((c.charCodeAt(0) - 65 + shift + 26) % 26 + 65);
+      return c;
+    }).join("");
+  }
+  const shift = document.getElementById("shift");
+  const shiftVal = document.getElementById("shiftVal");
+  const plain = document.getElementById("plain");
+  function update() {
+    const s = +shift.value;
+    shiftVal.textContent = s;
+    plain.textContent = caesar(cipher, s);
+  }
+  shift.addEventListener("input", update);
+  update();
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.radio",
+  "lines": [
+    "[ 信号搜索中 ]",
+    "> 正在扫描 VHF 频段……",
+    "> 发现备用频道：147.350 MHz",
+    "> 信号弱。正在锁定……",
+    "> 已截获一段加密报文。",
+    "> 来源：奥库斯站 07 号终端"
+  ],
+  "button": "▶ 接入频道",
+  "hint": "CHANNEL LOCKED — STAND BY",
+  "effect": "static",
+  "tone": 880
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — 页面未找到</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>HTTP <b class="bad">404</b></span>
+  <span>页面 <b>不存在</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1 class="red">404 · 页面未找到</h1>
+  <p class="sub">你请求的页面不存在。</p>
+
+  <div class="panel">
+    <div class="log">
+      <div>&gt; 但在这片冰原上，没有什么是真正「找不到」的。</div>
+      <div>&gt; 有些东西只是被 <span class="redacted">藏起来了</span>。</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">档案残片</div>
+    <div class="big">残片 #5：<span class="red">S</span></div>
+    <div class="dim" style="margin-top:6px;">最后一块。五块残片拼出那个名字。</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">去向</div>
+    <div class="log">
+      <div>&gt; 残片集齐了，去 <a href="vault.html" class="cyan">档案库</a>。</div>
+      <div>&gt; 那个名字，五块残片，按编号顺序。</div>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">五块残片都集齐了。</div>
+    <div class="hint-text" data-level="2">按编号顺序排列残片字母。</div>
+    <div class="hint-text" data-level="3">O R C U S = ORCUS。去「档案库」输入密码。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · error page</span>
+    <span class="faint">404 NOT FOUND</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("五块残片：O R C U S。去档案库。");
+  collectShard("S"); // 残片 #5
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.404",
+  "lines": [
+    "[ 信号丢失 ]",
+    "> 你到达了一个不存在的页面。",
+    "> 返回数据：404 NOT FOUND",
+    "> 但在这片冰原上，没有什么是真正找不到的。"
+  ],
+  "button": "▶ 继续",
+  "hint": "ERROR 404 — SIGNAL LOST",
+  "effect": "glitch",
+  "tone": 33
+});
+</script>
+</body>
+</html>

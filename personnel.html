@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 员工档案</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>档案 <b>HR-07</b></span>
+  <span>在岗 <b>5 / 6</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>员工档案</h1>
+  <p class="sub">奥库斯站驻站人员 · <span class="red">1 人失踪</span></p>
+
+  <div class="panel">
+    <div class="panel-title">花名册</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>姓名</th><th>工号</th><th>岗位</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>M·林德伯格</td><td>ORC-0192</td><td>站长</td><td class="green">在岗</td></tr>
+          <tr class="anomaly"><td>A·科瓦奇</td><td>ORC-7341</td><td>声学工程师</td><td>失踪</td></tr>
+          <tr><td>J·奥科纳</td><td>ORC-2208</td><td>气象学家</td><td class="green">在岗</td></tr>
+          <tr><td>R·帕克</td><td>ORC-5107</td><td>机械师</td><td class="green">在岗</td></tr>
+          <tr><td>S·伊藤</td><td>ORC-6640</td><td>医师</td><td class="green">在岗</td></tr>
+          <tr><td>D·维兰德</td><td>ORC-8893</td><td>厨师</td><td class="green">在岗</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="hint">失踪者是声学工程师。记住他工号的后四位。</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">站长手记</div>
+    <div class="log">
+      <div>主电源最近不稳定。如果断电，按失踪者工号后四位顺序复位断路器。</div>
+      <div>复位前，先检查 <span class="redacted">POWER</span> 系统。</div>
+    </div>
+    <div class="hint">⚠ 有的字被涂掉了。悬停或全选查看。</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">档案残片</div>
+    <div class="big">残片 #3：<span class="red">C</span></div>
+    <div class="dim" style="margin-top:6px;">下一站：站长手记里提到的地方。</div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">有人失踪了。</div>
+    <div class="hint-text" data-level="2">失踪者是声学工程师 A·科瓦奇，工号 ORC-7341。涂黑的字指向下一站。</div>
+    <div class="hint-text" data-level="3">工号后四位 7341 用于电源页断路器；涂黑字是 POWER → /power.html。残片 #3 = C。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · personnel records</span>
+    <span class="faint">file: HR-07</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("失踪者工号后四位：7341。涂黑的字指向下一站。");
+  collectShard("C"); // 残片 #3
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.personnel",
+  "lines": [
+    "[ 档案解密中 ]",
+    "> 正在访问：HR-07 员工档案",
+    "> 权限校验……通过",
+    "> 解密进度：████████████ 100%",
+    "> 6 名驻站人员。1 人失踪。"
+  ],
+  "button": "▶ 打开档案",
+  "hint": "FILE DECRYPTED",
+  "effect": "data",
+  "tone": 42
+});
+</script>
+</body>
+</html>

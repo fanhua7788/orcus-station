@@ -1,0 +1,6 @@
+# 文本文件统一换行符：Git 内部存 LF，Windows 检出转 CRLF
+* text=auto
+
+# 二进制文件不做任何换行符转换
+*.png binary
+*.wav binary

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 电源管理</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .breaker-row { display: flex; gap: 10px; margin: 12px 0; }
+  .breaker {
+    width: 56px; height: 72px; background: #0d1218; border: 1px solid var(--line2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--dim); font-size: 12px; letter-spacing: 1px; cursor: pointer;
+    transition: all .12s; user-select: none;
+  }
+  .breaker .led { width: 10px; height: 10px; border-radius: 50%; background: #2a343e; margin-bottom: 8px; }
+  .breaker.on { border-color: var(--green); color: var(--green); }
+  .breaker.on .led { background: var(--green); box-shadow: 0 0 8px rgba(79,214,122,0.8); }
+</style>
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>主电源 <b class="bad">离线</b></span>
+  <span>备用电源 <b class="amber">68%</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>电源管理</h1>
+  <p class="sub">主电源离线 · 需要按正确顺序复位断路器</p>
+
+  <div class="panel">
+    <div class="panel-title">断路器组 A</div>
+    <div class="log dim">按顺序点击断路器，输入四位复位序列。</div>
+    <div class="breaker-row">
+      <div class="breaker" data-d="7"><span class="led"></span>7</div>
+      <div class="breaker" data-d="3"><span class="led"></span>3</div>
+      <div class="breaker" data-d="4"><span class="led"></span>4</div>
+      <div class="breaker" data-d="1"><span class="led"></span>1</div>
+      <div class="breaker" data-d="9"><span class="led"></span>9</div>
+      <div class="breaker" data-d="0"><span class="led"></span>0</div>
+    </div>
+    <div style="margin-top:12px;">
+      <span class="dim">已输入序列：</span><span class="cyan big" id="seq" style="font-size:20px; letter-spacing:6px;">____</span>
+      <button id="clr" style="margin-left:12px;">清除</button>
+      <button id="go" style="margin-left:8px;">复位</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="panel" id="after" style="display:none;">
+    <div class="panel-title">系统回执</div>
+    <div class="log">
+      <div>&gt; 主电源恢复。<span class="green">3 路断路器已闭合。</span></div>
+      <div>&gt; 第 4 路断路器：<span class="red">未找到。</span></div>
+      <div>&gt; 错误代码：<span class="amber">404</span></div>
+      <div>&gt; 地址：<span class="cyan">/404.html</span></div>
+      <div>&gt; 建议：检查那个「不存在」的页面。</div>
+    </div>
+  </div>
+
+  <div class="panel" id="shard" style="display:none;">
+    <div class="panel-title">档案残片</div>
+    <div class="big">残片 #4：<span class="red">U</span></div>
+    <div class="dim" style="margin-top:6px;">还剩最后一块。</div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">复位序列来自员工档案。</div>
+    <div class="hint-text" data-level="2">失踪者工号后四位：7341。</div>
+    <div class="hint-text" data-level="3">按 7-3-4-1 依次点击断路器 → 解锁 → 提示 404 → /404.html。残片 #4 = U。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · power management</span>
+    <span class="faint">main breaker: OFFLINE</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("复位序列 = 失踪者工号后四位。");
+  collectShard("U"); // 残片 #4
+  const TARGET = "7341";
+  let seq = "";
+  const seqEl = document.getElementById("seq");
+  const msg = document.getElementById("msg");
+  const breakers = document.querySelectorAll(".breaker");
+
+  function renderSeq() { seqEl.textContent = (seq + "____").slice(0, 4); }
+  function renderLeds() {
+    breakers.forEach(function (b) {
+      const on = seq.includes(b.dataset.d);
+      b.classList.toggle("on", on);
+    });
+  }
+
+  breakers.forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (seq.length >= 4) return;
+      seq += b.dataset.d;
+      renderSeq(); renderLeds();
+      if (seq.length === 4) {
+        if (seq === TARGET) {
+          msg.className = "msg ok";
+          msg.textContent = "复位成功。";
+          document.getElementById("after").style.display = "";
+          document.getElementById("shard").style.display = "";
+        } else {
+          msg.className = "msg err";
+          msg.textContent = "复位失败。序列不正确。";
+          setTimeout(function () { seq = ""; renderSeq(); renderLeds(); msg.className = "msg"; }, 700);
+        }
+      }
+    });
+  });
+
+  document.getElementById("clr").addEventListener("click", function () {
+    seq = ""; renderSeq(); renderLeds(); msg.className = "msg"; msg.textContent = "";
+  });
+  document.getElementById("go").addEventListener("click", function () {
+    if (seq === TARGET) {
+      msg.className = "msg ok"; msg.textContent = "复位成功。";
+      document.getElementById("after").style.display = "";
+      document.getElementById("shard").style.display = "";
+    } else {
+      msg.className = "msg err"; msg.textContent = "序列不正确。";
+      setTimeout(function () { seq = ""; renderSeq(); renderLeds(); }, 700);
+    }
+  });
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.power",
+  "lines": [
+    "[ 电源告警 ]",
+    "> 主电源离线。",
+    "> 正在切换至备用电源……",
+    "> 备用电源：68%",
+    "> 需要人工复位断路器。"
+  ],
+  "button": "▶ 进入电源面板",
+  "hint": "MAIN BREAKER OFFLINE",
+  "effect": "crack",
+  "tone": 55
+});
+</script>
+</body>
+</html>

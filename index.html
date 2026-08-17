@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 内部终端 07</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  #boot {
+    position: fixed; inset: 0; z-index: 10000;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 1.1s ease;
+    overflow: hidden;
+  }
+  #boot::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0 1px, transparent 1px 3px);
+  }
+  #boot.fade { opacity: 0; pointer-events: none; }
+  #boot canvas { position: absolute; inset: 0; }
+  .boot-center { position: relative; z-index: 1; text-align: center; max-width: 680px; width: 90%; }
+  .boot-logo {
+    font-family: var(--mono); color: var(--cyan);
+    font-size: 26px; letter-spacing: 6px; font-weight: 700;
+    text-shadow: 0 0 18px rgba(70,208,224,0.6); margin-bottom: 34px;
+  }
+  .boot-logo .boot-dot { color: var(--red); animation: blink 1.2s steps(2) infinite; }
+  .boot-term {
+    text-align: left; color: var(--green); font-size: 14px; line-height: 2.1;
+    min-height: 250px; max-width: 560px; margin: 0 auto;
+    text-shadow: 0 0 8px rgba(79,214,122,0.4);
+  }
+  .boot-btn {
+    margin-top: 26px; background: #0d1a13; color: var(--green);
+    border: 1px solid #1e4d33; padding: 12px 28px;
+    font-family: var(--mono); font-size: 15px; letter-spacing: 3px;
+    cursor: pointer; transition: all .2s;
+  }
+  .boot-btn:hover { background: #13291c; border-color: var(--green); box-shadow: 0 0 14px rgba(79,214,122,0.25); }
+  .boot-hint { margin-top: 16px; color: var(--faint); font-size: 12px; letter-spacing: 2px; }
+  body.locked { overflow: hidden; }
+</style>
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="snowCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo">ORCUS<span class="boot-dot">●</span>STATION</div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;">▶ 接入终端</button>
+    <div class="boot-hint" id="bootHint" style="display:none;">CONNECTION ESTABLISHED — DO YOU PROCEED?</div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html" class="active">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>室外温度 <b class="bad">-41.7 °C</b></span>
+  <span>风速 <b>23.0 m/s</b></span>
+  <span>电源 <b>87%</b></span>
+  <span>系统时间 <b id="clock">23:59:59</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>作业日志</h1>
+  <p class="sub">ORCUS 科考站 · 南极冰原 · 公用终端 07 · <span class="red">连接不稳定</span></p>
+
+  <div class="panel">
+    <div class="panel-title">值班日志 — 最后同步于 00:00:00</div>
+    <div class="log" id="log">
+      <div><span class="ts">[23:41]</span>换班完成。A·科瓦奇接替夜班。</div>
+      <div><span class="ts">[23:47]</span>外部探头 <span class="redacted">CHECK</span> 完成，读数 <span class="redacted">THE</span> 已记录。</div>
+      <div><span class="ts">[23:52]</span>声学阵列捕捉到 <span class="redacted">LOWEST</span> 段异常信号，已上报。</div>
+      <div><span class="ts">[23:58]</span>值班员未返回。室外温度持续下降。<span class="redacted">TEMP</span></div>
+      <div><span class="ts">[23:59]</span><span class="red">我听见冰下面有人敲门。</span></div>
+    </div>
+    <div class="hint">⚠ 部分记录已被涂改。把鼠标悬停在黑色方块上，或按 Ctrl+A 全选。</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">系统消息</div>
+    <div class="term" id="term">
+      <div>&gt; 检索：奥库斯站 07 号终端</div>
+      <div>&gt; 连接状态：<span class="amber">不稳定</span></div>
+      <div>&gt; 最后同步：<span class="faint">████-██-██ 00:00:00</span></div>
+      <div>&gt; 警告：检测到冰层下方有规律性低频敲击</div>
+      <div>&gt; 建议：<span class="red">不要回应。</span></div>
+      <div>&gt; <span class="cursor"></span></div>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">日志里有几处被涂黑的地方。</div>
+    <div class="hint-text" data-level="2">把鼠标悬停在黑色方块上，或按 Ctrl+A 全选，被涂掉的字会显现出来。</div>
+    <div class="hint-text" data-level="3">涂黑字拼起来是 CHECK THE LOWEST TEMP（去看最低温）。去「环境监测」页，找 07-03 那一行。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · internal terminal 07</span>
+    <span class="faint">connection: UNSTABLE</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("他们不是第一批。别相信左上角的时间戳。");
+
+  // 倒退的时钟 —— 这个站的系统时间一直在往回走
+  let t = new Date(2000, 0, 1, 23, 59, 59);
+  const clockEl = document.getElementById("clock");
+  function pad(n) { return String(n).padStart(2, "0"); }
+  setInterval(function () {
+    t = new Date(t.getTime() - 1000);
+    clockEl.textContent = pad(t.getHours()) + ":" + pad(t.getMinutes()) + ":" + pad(t.getSeconds());
+  }, 1000);
+
+  // 彩蛋：点击终端最后一行
+  const term = document.getElementById("term");
+  term.addEventListener("click", function () {
+    term.insertAdjacentHTML("beforeend", "<div>&gt; 有人正在看着屏幕。别回头。<span class='red'>&#9608;</span></div>");
+  });
+
+  // ---- 氛围页：雪花 + 打字机 + 接入 ----
+  (function () {
+    // 同一会话内已接入过，直接进入（避免关卡间导航反复看氛围页）
+    if (sessionStorage.getItem("orcus.boot.done") === "1") {
+      document.getElementById("boot").style.display = "none";
+      document.body.classList.remove("locked");
+      return;
+    }
+    var lines = [
+      "[ 信号接入中 ]",
+      "> 正在连接：南极洲 · 奥库斯站 07 号终端",
+      "> 信号延迟：2.4 秒",
+      "> 握手完成。连接建立。",
+      "> 检测到未授权的访问者。",
+      "> 最后同步时间：00:00:00",
+      "> 警告：冰层下方有规律性敲击声。",
+      "> 你确定要继续吗？",
+    ];
+    var bootTerm = document.getElementById("bootTerm");
+    var enterBtn = document.getElementById("bootEnter");
+    var hint = document.getElementById("bootHint");
+    var li = 0;
+
+    function typeLine() {
+      if (li >= lines.length) {
+        enterBtn.style.display = "";
+        hint.style.display = "";
+        return;
+      }
+      var text = lines[li];
+      var div = document.createElement("div");
+      bootTerm.appendChild(div);
+      var i = 0;
+      (function typeChar() {
+        if (i < text.length) {
+          div.textContent = text.slice(0, i + 1);
+          i++;
+          setTimeout(typeChar, li === 0 ? 50 : 16);
+        } else {
+          li++;
+          setTimeout(typeLine, li === 1 ? 420 : 240);
+        }
+      })();
+    }
+
+    // 雪花
+    var cv = document.getElementById("snowCanvas");
+    var sctx = cv.getContext("2d");
+    function sizeSnow() { cv.width = innerWidth; cv.height = innerHeight; }
+    sizeSnow();
+    addEventListener("resize", sizeSnow);
+    var flakes = [];
+    for (var f = 0; f < 90; f++) {
+      flakes.push({ x: Math.random()*innerWidth, y: Math.random()*innerHeight, r: Math.random()*2+0.6, s: Math.random()*0.6+0.25, d: Math.random()*0.5-0.25 });
+    }
+    (function snow() {
+      sctx.clearRect(0, 0, cv.width, cv.height);
+      sctx.fillStyle = "rgba(205,225,245,0.75)";
+      for (var k = 0; k < flakes.length; k++) {
+        var fl = flakes[k];
+        fl.y += fl.s; fl.x += fl.d;
+        if (fl.y > cv.height) { fl.y = -3; fl.x = Math.random()*cv.width; }
+        if (fl.x > cv.width) fl.x = 0;
+        if (fl.x < 0) fl.x = cv.width;
+        sctx.beginPath(); sctx.arc(fl.x, fl.y, fl.r, 0, Math.PI*2); sctx.fill();
+      }
+      requestAnimationFrame(snow);
+    })();
+
+    // 接入
+    enterBtn.addEventListener("click", function () {
+      try {
+        var ac = getAudioCtx();
+        if (ac) {
+          if (ac.state === "suspended") ac.resume();
+          var osc = ac.createOscillator();
+          var g = ac.createGain();
+          osc.type = "sine"; osc.frequency.value = 55;
+          g.gain.setValueAtTime(0.0001, ac.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.32, ac.currentTime + 0.6);
+          g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 2.6);
+          osc.connect(g).connect(ac.destination);
+          osc.start(); osc.stop(ac.currentTime + 2.7);
+        }
+      } catch (e) {}
+      sessionStorage.setItem("orcus.boot.done", "1");
+      var boot = document.getElementById("boot");
+      boot.classList.add("fade");
+      document.body.classList.remove("locked");
+      setTimeout(function () { boot.style.display = "none"; }, 1150);
+    });
+
+    typeLine();
+  })();
+</script>
+</body>
+</html>

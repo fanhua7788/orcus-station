@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 第 7 号档案</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>档案 <b class="amber">#7</b></span>
+  <span>状态 <b class="bad">已解密</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<!-- 未授权访问 -->
+<div id="denied" class="wrap" style="display:none;">
+  <main>
+    <h1 class="red">访问拒绝</h1>
+    <p class="sub">你没有第 7 号档案的访问密钥。</p>
+    <div class="panel">
+      <div class="log">档案库需要密钥。回到 <a href="vault.html" class="cyan">档案库</a> 解锁。</div>
+    </div>
+  </main>
+</div>
+
+<!-- 已授权内容 -->
+<div id="content" class="wrap" style="display:none;">
+  <main>
+    <h1>第 7 号档案 · 已解密</h1>
+    <p class="sub">事件编号 ORCUS-07 · 保密级别：<span class="red">最高</span></p>
+
+    <div class="panel">
+      <div class="panel-title">档案正文</div>
+      <div class="log">
+        <div>位置：冰层下方约 <span class="cyan">40 米</span></div>
+        <div>现象：持续、规律的低频敲击</div>
+        <div>结构：<span class="amber">符合摩尔斯电码</span></div>
+        <div>内容：反复重复 <span class="red">同一个词</span></div>
+        <div>结论：<span class="red">敲击声来自冰层内部。没有已知的自然解释。</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">音频分析终端</div>
+      <div class="log" style="margin-bottom:14px;">
+        <div class="dim">输入你的名字。终端将按档案记录的节奏模拟冰层下方的敲击。</div>
+        <div class="faint">短音 = 点 · 长音 = 划 · 仅支持英文字母 / 数字</div>
+      </div>
+      <input type="text" id="name" placeholder="你的名字（英文）" maxlength="24" autocomplete="off">
+      <p style="margin-top:12px;">
+        <button id="listen">▶ 听它敲</button>
+      </p>
+      <div class="msg" id="status"></div>
+    </div>
+
+    <div class="panel reveal" id="reveal">
+      <div class="big">它敲的是……</div>
+      <div class="big red" id="revealName" style="margin-top:6px;"></div>
+      <div class="dim" style="margin-top:10px;">从你打开这个页面开始，它就在冰层下面，一下一下地，敲你的名字。</div>
+    </div>
+
+    <div class="panel reveal" id="finale">
+      <div class="big red">不要回应。</div>
+      <div class="dim" style="margin-top:10px;">关掉这个页面。现在。</div>
+      <div class="faint" style="margin-top:6px;">—— 不然它会知道，你已经听见了。</div>
+    </div>
+
+    <footer>
+      <span>ORCUS STATION · archive #7</span>
+      <span class="faint">do not respond</span>
+    </footer>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("你输入什么，它就敲什么。");
+
+  const params = new URLSearchParams(location.search);
+  const key = params.get("key") || "";
+
+  async function main() {
+    const h = await sha256Hex(key);
+    if (h !== ORCUS_HASH) {
+      document.getElementById("denied").style.display = "";
+      return;
+    }
+    document.getElementById("content").style.display = "";
+    init();
+  }
+
+  function init() {
+    const nameInput = document.getElementById("name");
+    const btn = document.getElementById("listen");
+    const status = document.getElementById("status");
+    const reveal = document.getElementById("reveal");
+    const revealName = document.getElementById("revealName");
+    const finale = document.getElementById("finale");
+
+    btn.addEventListener("click", async function () {
+      const raw = nameInput.value.trim();
+      const upper = raw.toUpperCase();
+      if (!upper) { nameInput.focus(); return; }
+      if (!/^[A-Z0-9 ]+$/.test(upper)) {
+        status.className = "msg err";
+        status.textContent = "只能使用英文字母、数字和空格。";
+        return;
+      }
+
+      btn.disabled = true;
+      status.className = "msg";
+      status.textContent = "正在监听冰层下方……";
+
+      try {
+        const dur = await playMorse(upper);
+        await new Promise(function (r) { setTimeout(r, Math.max(300, dur * 1000) + 500); });
+        revealName.textContent = raw;
+        reveal.classList.add("show");
+        status.className = "msg ok";
+        status.textContent = "录音结束。你已经听见了。";
+
+        setTimeout(function () {
+          finale.classList.add("show");
+          document.querySelector(".noise").style.opacity = "0.14";
+          document.body.classList.add("glitch");
+        }, 1800);
+      } catch (e) {
+        status.className = "msg err";
+        status.textContent = "音频初始化失败：" + e.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+
+  main();
+</script>
+</body>
+</html>

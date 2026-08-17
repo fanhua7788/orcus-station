@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 图像分析终端</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .tool-grid { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+  @media (max-width: 860px) { .tool-grid { grid-template-columns: 1fr; } }
+  #drop {
+    border: 2px dashed var(--line2);
+    padding: 30px 20px;
+    text-align: center;
+    color: var(--dim);
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: all .15s;
+  }
+  #drop.over { border-color: var(--green); color: var(--green); background: rgba(79,214,122,0.05); }
+  #viewer { width: 100%; display: block; background: #000; border: 1px solid var(--line); }
+  .ctl { margin: 12px 0; }
+  .ctl label { display: flex; justify-content: space-between; font-size: 12px; color: var(--dim); letter-spacing: 1px; margin-bottom: 4px; }
+  .ctl label b { color: var(--cyan); font-weight: 400; }
+  input[type="range"] { width: 100%; accent-color: var(--green); }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  #lsbResult { white-space: pre-wrap; word-break: break-all; line-height: 1.8; }
+  .badge { color: var(--amber); }
+  .found { color: var(--green); }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html" class="active">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>模块 <b>IMAGE-ANALYZER v2.1</b></span>
+  <span>状态 <b class="green">就绪</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>图像分析终端</h1>
+  <p class="sub">上传监控画面，调节亮度 / 对比度 / 色阶，或提取像素最低比特（LSB）</p>
+
+  <div class="tool-grid">
+    <div>
+      <div class="panel">
+        <div class="panel-title">画面</div>
+        <div id="drop">把图片拖到这里，或点击选择文件<br><span class="faint">提示：试试 CAM-03 的原图</span></div>
+        <input type="file" id="file" accept="image/*" hidden>
+        <canvas id="viewer"></canvas>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="panel-title">增强调节</div>
+        <div class="ctl"><label>亮度 <b id="vB">0</b></label><input type="range" id="bright" min="-120" max="120" value="0"></div>
+        <div class="ctl"><label>对比度 <b id="vC">100</b></label><input type="range" id="contrast" min="0" max="300" value="100"></div>
+        <div class="ctl"><label>Gamma <b id="vG">1.0</b></label><input type="range" id="gamma" min="20" max="250" value="100"></div>
+        <div class="ctl"><label>黑点 <b id="vBp">0</b></label><input type="range" id="blackp" min="0" max="128" value="0"></div>
+        <div class="ctl"><label>白点 <b id="vWp">255</b></label><input type="range" id="whitep" min="16" max="255" value="255"></div>
+        <div class="btn-row">
+          <button id="autoLevels">一键色阶增强（找暗处文字）</button>
+          <button id="reset">重置</button>
+        </div>
+        <div class="hint">暗部藏字：把黑点拉到 8 左右、白点拉到 70 左右。</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">LSB 提取</div>
+        <div class="log dim" style="font-size:12px;">检查像素 R / G / B 通道最低比特，寻找 <span class="badge">STEGO1</span> 签名。</div>
+        <div class="btn-row">
+          <button id="lsbBtn">提取 LSB</button>
+        </div>
+        <div class="msg" id="lsbMsg"></div>
+        <div class="term" id="lsbResult" style="margin-top:12px; min-height:60px;">&gt; 等待提取……</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · image analyzer</span>
+    <span class="faint">module: IMG-ANLZ-21</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("暗处藏字：黑点 8，白点 70。像素的 LSB 里还有签名。");
+
+  const drop = document.getElementById("drop");
+  const fileInput = document.getElementById("file");
+  const viewer = document.getElementById("viewer");
+  const ctx = viewer.getContext("2d");
+
+  let original = null;   // ImageData 原始
+  let current = null;    // ImageData 当前
+
+  drop.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault(); drop.classList.remove("over");
+    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+
+  function loadFile(f) {
+    const url = URL.createObjectURL(f);
+    const img = new Image();
+    img.onload = function () {
+      viewer.width = img.width;
+      viewer.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      original = ctx.getImageData(0, 0, img.width, img.height);
+      URL.revokeObjectURL(url);
+      document.getElementById("lsbResult").textContent = "> 图片已加载：" + img.width + " x " + img.height;
+      document.getElementById("lsbMsg").className = "msg";
+      document.getElementById("lsbMsg").textContent = "";
+      applyFilters();
+    };
+    img.src = url;
+  }
+
+  const clamp8 = (v) => (v < 0 ? 0 : v > 255 ? 255 : v);
+
+  function getParams() {
+    return {
+      b: +document.getElementById("bright").value,
+      c: +document.getElementById("contrast").value / 100,
+      g: +document.getElementById("gamma").value / 100,
+      bp: +document.getElementById("blackp").value,
+      wp: +document.getElementById("whitep").value
+    };
+  }
+
+  function applyFilters() {
+    if (!original) return;
+    const { b, c, g, bp, wp } = getParams();
+    const src = original.data;
+    const dst = new Uint8ClampedArray(src.length);
+    for (let i = 0; i < src.length; i += 4) {
+      for (let ch = 0; ch < 3; ch++) {
+        let v = src[i + ch];
+        if (wp > bp) v = (v - bp) / (wp - bp) * 255;   // 色阶拉伸
+        v = clamp8(v + b);                              // 亮度
+        v = (v - 128) * c + 128;                        // 对比度
+        v = 255 * Math.pow(v / 255, 1 / g);             // gamma
+        dst[i + ch] = clamp8(v);
+      }
+      dst[i + 3] = 255;
+    }
+    current = new ImageData(dst, original.width, original.height);
+    ctx.putImageData(current, 0, 0);
+  }
+
+  ["bright","contrast","gamma","blackp","whitep"].forEach((id) => {
+    document.getElementById(id).addEventListener("input", () => {
+      document.getElementById("v" + id.charAt(0).toUpperCase() + id.slice(1)).textContent =
+        id === "bright" ? (+document.getElementById(id).value) :
+        id === "contrast" || id === "gamma" ? (+document.getElementById(id).value / 100).toFixed(2) :
+        document.getElementById(id).value;
+      applyFilters();
+    });
+  });
+
+  document.getElementById("autoLevels").addEventListener("click", () => {
+    document.getElementById("blackp").value = 8;
+    document.getElementById("whitep").value = 70;
+    document.getElementById("vBp").textContent = "8";
+    document.getElementById("vWp").textContent = "70";
+    applyFilters();
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    ["bright","contrast","gamma","blackp","whitep"].forEach((id) => {
+      document.getElementById(id).value = id === "contrast" ? 100 : id === "gamma" ? 100 : id === "whitep" ? 255 : 0;
+    });
+    document.getElementById("vB").textContent = "0";
+    document.getElementById("vC").textContent = "100";
+    document.getElementById("vG").textContent = "1.0";
+    document.getElementById("vBp").textContent = "0";
+    document.getElementById("vWp").textContent = "255";
+    applyFilters();
+  });
+
+  // ---- LSB 提取 ----
+  function parseBits(bits, name) {
+    const marker = "STEGO1";
+    const markerBits = [];
+    for (const ch of marker) {
+      const code = ch.charCodeAt(0);
+      for (let k = 7; k >= 0; k--) markerBits.push((code >> k) & 1);
+    }
+    for (let start = 0; start < bits.length - markerBits.length - 16; start++) {
+      let match = true;
+      for (let i = 0; i < markerBits.length; i++) {
+        if (bits[start + i] !== markerBits[i]) { match = false; break; }
+      }
+      if (match) {
+        const lenOff = start + markerBits.length;
+        let len = 0;
+        for (let i = 0; i < 8; i++) len = (len << 1) | bits[lenOff + i];
+        if (len <= 0 || len > 200) continue;
+        let msg = "";
+        const msgOff = lenOff + 8;
+        for (let i = 0; i < len; i++) {
+          let c = 0;
+          for (let k = 0; k < 8; k++) c = (c << 1) | bits[msgOff + i * 8 + k];
+          msg += String.fromCharCode(c);
+        }
+        return { found: true, name, message: msg, offset: start };
+      }
+    }
+    return { found: false, name, message: "" };
+  }
+
+  document.getElementById("lsbBtn").addEventListener("click", () => {
+    const msgEl = document.getElementById("lsbMsg");
+    const resEl = document.getElementById("lsbResult");
+    if (!original) {
+      msgEl.className = "msg err";
+      msgEl.textContent = "请先加载图片。";
+      return;
+    }
+    // LSB 提取必须基于原始像素（调色阶会破坏最低比特）
+    const data = original.data;
+    const out = [];
+    const names = ["R 通道", "G 通道", "B 通道"];
+    for (let ch = 0; ch < 3; ch++) {
+      const bits = [];
+      for (let i = ch; i < data.length; i += 4) bits.push(data[i] & 1);
+      out.push(parseBits(bits, names[ch]));
+    }
+    let text = "";
+    let foundAny = false;
+    for (const r of out) {
+      if (r.found) {
+        foundAny = true;
+        text += "> [" + r.name + "] 发现签名 @bit " + r.offset + "\n";
+        text += "> 内容：\"" + r.message + "\"\n\n";
+      }
+    }
+    if (!foundAny) {
+      text = "> 未发现 STEGO1 签名。\n> （这张图可能没有 LSB 隐写，或签名不在前三通道。）";
+    }
+    resEl.textContent = text;
+    msgEl.className = "msg ok";
+    msgEl.textContent = foundAny ? "提取完成。" : "提取完成：无签名。";
+  });
+</script>
+</body>
+</html>

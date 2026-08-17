@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 档案库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html" class="active">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>权限 <b class="bad">受限</b></span>
+  <span>加密 <b>SHA-256</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>档案库 · 受限访问</h1>
+  <p class="sub">第 7 号档案 · 需要访问密钥</p>
+
+  <div class="panel" id="gate">
+    <div class="panel-title">身份验证</div>
+    <div class="log" style="margin-bottom:14px;">
+      <div class="dim">提示：五块档案残片，按编号顺序，拼出那个名字。</div>
+      <div class="faint">残片散落在：摄像头 / 通讯记录 / 员工档案 / 电源 / 404。</div>
+      <div class="green" style="margin-top:4px;">已收集残片：<span data-progress-count>0 / 5</span></div>
+    </div>
+    <input type="password" id="key" placeholder="输入访问密钥" autocomplete="off" autofocus>
+    <p style="margin-top:12px;">
+      <button id="unlock">解锁档案</button>
+    </p>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">五块残片散落在各关。</div>
+    <div class="hint-text" data-level="2">残片位置：摄像头 / 通讯记录 / 员工档案 / 电源 / 404。</div>
+    <div class="hint-text" data-level="3">按编号顺序：O R C U S → 密码 ORCUS。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · restricted archive</span>
+    <span class="faint">auth: SHA-256</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("源码里只有哈希。名字得去冰层下面找。");
+
+  const input = document.getElementById("key");
+  const btn = document.getElementById("unlock");
+  const msg = document.getElementById("msg");
+  const gate = document.getElementById("gate");
+
+  async function tryUnlock() {
+    const v = input.value.trim();
+    if (!v) { input.focus(); return; }
+    btn.disabled = true;
+    const h = await sha256Hex(v);
+    if (h === ORCUS_HASH) {
+      msg.className = "msg ok";
+      msg.textContent = "访问已授权。正在打开第 7 号档案……";
+      setTimeout(function () {
+        location.href = "final.html?key=" + encodeURIComponent(v);
+      }, 900);
+    } else {
+      msg.className = "msg err";
+      msg.textContent = "访问拒绝。密钥不正确。";
+      gate.classList.remove("shake");
+      void gate.offsetWidth;
+      gate.classList.add("shake");
+      input.value = "";
+      input.focus();
+      btn.disabled = false;
+    }
+  }
+
+  btn.addEventListener("click", tryUnlock);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") tryUnlock();
+  });
+</script>
+</body>
+</html>

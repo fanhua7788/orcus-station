@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 摄像头阵列</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html" class="active">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>在线画面 <b>6 / 6</b></span>
+  <span>异常 <b class="bad">1</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>摄像头阵列</h1>
+  <p class="sub">全站监控 · 静止帧 · <span class="red">3 号画面昨晚 03:33:33 拍到冰面异常</span></p>
+
+  <div class="panel">
+    <div class="panel-title">线索</div>
+    <div class="log">
+      <div>CAM-03 的画面里藏着东西。<span class="dim">下载原图，用 <a href="decoder.html" class="cyan">解码工具</a> 调高亮度 / 对比度。</span></div>
+      <div>调亮之后，你会看到下一站的代号。</div>
+      <div>进阶：用解码工具提取 LSB，得到第一块<span class="red">档案残片</span>。</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">档案残片</div>
+    <div class="big">残片 #1：<span class="red">O</span></div>
+    <div class="dim" style="margin-top:6px;">共五块。下一站：调亮后看到的那个代号（/代号.html）。</div>
+  </div>
+
+  <div class="cam-grid">
+    <div class="cam-card">
+      <div class="cam-head"><span>CAM-01</span><span>23:59:58</span></div>
+      <img src="assets/img/cam1.png" alt="CAM-01 外景雪原" loading="lazy">
+      <a class="dl" href="assets/img/cam1.png" download>↓ 下载原图</a>
+    </div>
+    <div class="cam-card">
+      <div class="cam-head"><span>CAM-02</span><span>23:59:59</span></div>
+      <img src="assets/img/cam2.png" alt="CAM-02 走廊" loading="lazy">
+      <a class="dl" href="assets/img/cam2.png" download>↓ 下载原图</a>
+    </div>
+    <div class="cam-card anomaly">
+      <div class="cam-head"><span>CAM-03 ⚠</span><span class="red">03:33:33</span></div>
+      <img src="assets/img/cam3.png" alt="CAM-03 冰面异常" loading="lazy">
+      <a class="dl" href="assets/img/cam3.png" download>↓ 下载原图（藏了东西）</a>
+    </div>
+    <div class="cam-card">
+      <div class="cam-head"><span>CAM-04</span><span>23:59:57</span></div>
+      <img src="assets/img/cam4.png" alt="CAM-04 实验室" loading="lazy">
+      <a class="dl" href="assets/img/cam4.png" download>↓ 下载原图</a>
+    </div>
+    <div class="cam-card">
+      <div class="cam-head"><span>CAM-05</span><span>23:59:59</span></div>
+      <img src="assets/img/cam5.png" alt="CAM-05 宿舍" loading="lazy">
+      <a class="dl" href="assets/img/cam5.png" download>↓ 下载原图</a>
+    </div>
+    <div class="cam-card">
+      <div class="cam-head"><span>CAM-06</span><span>23:59:56</span></div>
+      <img src="assets/img/cam6.png" alt="CAM-06 发电机房" loading="lazy">
+      <a class="dl" href="assets/img/cam6.png" download>↓ 下载原图</a>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">3 号画面昨晚 03:33:33 异常。</div>
+    <div class="hint-text" data-level="2">下载 cam3.png 原图，用「解码工具」点「一键色阶增强」，左下角会显出一个单词；「提取 LSB」得到残片。</div>
+    <div class="hint-text" data-level="3">那个单词是 RADIO → 访问 /radio.html。残片 #1 = O。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · video surveillance</span>
+    <span class="faint">recording: 03:33:33</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("CAM-03。左下角。亮一点。");
+  collectShard("O"); // 残片 #1
+  // 让玩家点击异常画面时给个提示
+  document.querySelector(".cam-card.anomaly img").addEventListener("click", function () {
+    alert("试试：下载原图 → 在图片编辑器里把亮度/对比度拉满。");
+  });
+</script>
+</body>
+</html>

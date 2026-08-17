@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 环境监测</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html" class="active">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>采样周期 <b>1 h</b></span>
+  <span>传感器 <b class="amber">1 个离线</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>环境监测</h1>
+  <p class="sub">室外气象数据 · 过去 7 天 · <span class="amber">注意 07-03 的读数</span></p>
+
+  <div class="panel">
+    <div class="panel-title">气温 / 风速 / 气压 / 湿度 / 噪声</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>日期</th><th>气温 (°C)</th><th>风速 (m/s)</th><th>气压 (hPa)</th><th>湿度 (%)</th><th>噪声 (dB)</th><th>状态</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>07-01</td><td>-33.2</td><td>18.0</td><td>988.1</td><td>62.0</td><td>34.0</td><td class="green">正常</td></tr>
+          <tr><td>07-02</td><td>-35.7</td><td>22.4</td><td>991.5</td><td>58.0</td><td>37.0</td><td class="green">正常</td></tr>
+          <tr class="anomaly"><td>07-03</td><td>-40.0</td><td>67.0</td><td>965.0</td><td>77.0</td><td>51.0</td><td>⚠ 异常</td></tr>
+          <tr><td>07-04</td><td>-36.1</td><td>24.0</td><td>987.2</td><td>60.0</td><td>35.0</td><td class="green">正常</td></tr>
+          <tr><td>07-05</td><td>-34.8</td><td>19.5</td><td>990.0</td><td>63.0</td><td>33.0</td><td class="green">正常</td></tr>
+          <tr><td>07-06</td><td>-37.3</td><td>26.0</td><td>984.6</td><td>55.0</td><td>39.0</td><td class="green">正常</td></tr>
+          <tr><td>07-07</td><td>-35.0</td><td>21.0</td><td>989.4</td><td>61.0</td><td>36.0</td><td class="green">正常</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="hint">07-03 是全年最低温。那一行的其他读数也奇怪。<span class="dim">试试把整数部分换成字符。</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">声学阵列 · 记录片段 #113</div>
+    <div class="log">
+      <div>时长：<span class="cyan">3.9 秒</span> · 来源：冰层下方约 40 米 · 类型：低频敲击</div>
+      <div>分析：<span class="amber">疑似摩尔斯电码</span>。短音 = 点，长音 = 划。</div>
+    </div>
+    <p style="margin-top:12px;">
+      <button id="playBtn">▶ 播放记录 #113</button>
+      <button id="analyzeBtn" style="margin-left:8px;">📊 分析波形</button>
+      <span id="playMsg" class="dim" style="margin-left:12px;"></span>
+    </p>
+    <audio id="sig" src="assets/audio/signal.wav" preload="auto"></audio>
+    <canvas id="wave" width="900" height="170"></canvas>
+    <div class="wave-legend">
+      <span class="dot">■ 短块 = 点（·）</span>
+      <span class="dash">■ 长块 = 划（—）</span>
+      <span id="waveResult" class="cyan" style="margin-left:auto;"></span>
+    </div>
+    <div class="hint">听出来 / 看出来之后，去 <a href="cameras.html" class="cyan">摄像头阵列</a> 看看对应的那台。</div>
+  </div>
+
+  <div class="hint-box">
+    <div class="hint-head">💡 卡住了？点击查看提示</div>
+    <button class="hint-btn" data-level="1">轻微提示</button>
+    <button class="hint-btn" data-level="2">明确提示</button>
+    <button class="hint-btn" data-level="3">直接答案</button>
+    <div class="hint-text" data-level="1">07-03 那一行标红了，其他读数也奇怪。</div>
+    <div class="hint-text" data-level="2">风速 67、气压后两位 65、湿度 77、噪声 51 —— 这些数字是 ASCII 码。也可以点「分析波形」看声学记录。</div>
+    <div class="hint-text" data-level="3">67=C、65=A、77=M、51=3 → CAM3。去「摄像头」阵列看 3 号画面。</div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · environmental telemetry</span>
+    <span class="faint">sensor 07-OFFLINE</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("最低温那一行，数字会说话。67 65 77 51。");
+
+  const audio = document.getElementById("sig");
+  const btn = document.getElementById("playBtn");
+  const msg = document.getElementById("playMsg");
+  btn.addEventListener("click", function () {
+    if (audio.paused) {
+      audio.play().then(function () {
+        btn.textContent = "■ 停止";
+        msg.textContent = "正在播放……";
+      });
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      btn.textContent = "▶ 播放记录 #113";
+      msg.textContent = "";
+    }
+  });
+  audio.addEventListener("ended", function () {
+    btn.textContent = "▶ 播放记录 #113";
+    msg.textContent = "听清了吗？";
+  });
+</script>
+<script>
+  // ---- 音频频谱可视化 + 摩尔斯自动解码 ----
+  function morseToLetter(code) {
+    for (var letter in MORSE) {
+      if (MORSE[letter] === code) return letter;
+    }
+    return "?";
+  }
+
+  var analyzeBtn = document.getElementById("analyzeBtn");
+  var waveCanvas = document.getElementById("wave");
+  var waveResult = document.getElementById("waveResult");
+
+  analyzeBtn.addEventListener("click", async function () {
+    analyzeBtn.disabled = true;
+    waveResult.textContent = "分析中……";
+    try {
+      var resp = await fetch("assets/audio/signal.wav");
+      var arrayBuf = await resp.arrayBuffer();
+      var ac = getAudioCtx();
+      var audioBuf = await ac.decodeAudioData(arrayBuf);
+      var data = audioBuf.getChannelData(0);
+      var sr = audioBuf.sampleRate;
+      var W = waveCanvas.width, H = waveCanvas.height;
+      var wctx = waveCanvas.getContext("2d");
+
+      // 背景 + 中线
+      wctx.fillStyle = "#04070a";
+      wctx.fillRect(0, 0, W, H);
+      wctx.strokeStyle = "#1c2733";
+      wctx.beginPath(); wctx.moveTo(0, H/2); wctx.lineTo(W, H/2); wctx.stroke();
+
+      // 包络波形
+      var step = Math.max(1, Math.floor(data.length / W));
+      for (var x = 0; x < W; x++) {
+        var max = 0;
+        for (var i = 0; i < step; i++) {
+          var v = Math.abs(data[x*step + i] || 0);
+          if (v > max) max = v;
+        }
+        var h = Math.min(1, max / 0.9) * (H/2 - 8);
+        wctx.fillStyle = "#46d0e0";
+        wctx.fillRect(x, H/2 - h, 1, h*2);
+      }
+
+      // 脉冲检测
+      var win = Math.max(1, Math.floor(sr * 0.008));
+      var thresh = 0.04;
+      var pulses = [];
+      var inPulse = false, start = 0;
+      for (var j = 0; j < data.length; j += win) {
+        var mx = 0;
+        for (var k = 0; k < win && j+k < data.length; k++) {
+          var vv = Math.abs(data[j+k]);
+          if (vv > mx) mx = vv;
+        }
+        var on = mx > thresh;
+        if (on && !inPulse) { inPulse = true; start = j; }
+        else if (!on && inPulse) { inPulse = false; pulses.push({ start: start, end: j, dur: (j-start)/sr }); }
+      }
+      if (inPulse) pulses.push({ start: start, end: data.length, dur: (data.length-start)/sr });
+
+      // 标注点划（绿=点，黄=划）
+      var totalT = data.length / sr;
+      pulses.forEach(function (p) {
+        var isDash = p.dur >= 0.15;
+        var px = p.start / sr / totalT * W;
+        var pw = Math.max(2, p.dur / totalT * W);
+        wctx.fillStyle = isDash ? "#e0a44a" : "#4fd67a";
+        wctx.fillRect(px, H/2 - 16, pw, 4);
+      });
+
+      // 摩尔斯解码
+      var decoded = "";
+      var cur = "";
+      for (var m = 0; m < pulses.length; m++) {
+        cur += pulses[m].dur >= 0.15 ? "-" : ".";
+        if (m < pulses.length - 1) {
+          var gap = (pulses[m+1].start - pulses[m].end) / sr;
+          if (gap > 0.18) {
+            decoded += morseToLetter(cur);
+            cur = "";
+            if (gap > 0.4) decoded += " ";
+          }
+        }
+      }
+      decoded += morseToLetter(cur);
+
+      var dots = pulses.filter(function (p) { return p.dur < 0.15; }).length;
+      var dashes = pulses.length - dots;
+      waveResult.innerHTML = "解码：<span class='green'>" + decoded + "</span>（" + dots + " 点 · " + dashes + " 划）";
+    } catch (e) {
+      waveResult.textContent = "分析失败：" + e.message;
+    } finally {
+      analyzeBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

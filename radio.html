@@ -87,7 +87,7 @@
     <button class="hint-btn" data-level="3">直接答案</button>
     <div class="hint-text" data-level="1">值班员在日志边缘写了个「-3」。</div>
     <div class="hint-text" data-level="2">这是凯撒密码：把密文每个字母往前挪 3 位（偏移 -3）。</div>
-    <div class="hint-text" data-level="3">SHUVRQQHO → PERSONNEL。去 /personnel.html。残片 #2 = R。</div>
+    <div class="hint-text" data-level="3">SHUVRQQHO → personnel。去 /personnel.html。残片 #2 = R。</div>
   </div>
 
   <footer>
@@ -98,12 +98,12 @@
 
 <script src="assets/app.js"></script>
 <script>
-  consoleEgg("凯撒，-3。SHUVRQQHO。");
+  consoleEgg("凯撒，-3。SHUVRQQHO → personnel。");
   collectShard("R"); // 残片 #2
   const cipher = "SHUVRQQHO";
   function caesar(s, shift) {
     return s.split("").map(function (c) {
-      if (/[A-Z]/.test(c)) return String.fromCharCode((c.charCodeAt(0) - 65 + shift + 26) % 26 + 65);
+      if (/[A-Z]/.test(c)) return String.fromCharCode((c.charCodeAt(0) - 65 + shift + 26) % 26 + 97); // 输出小写
       return c;
     }).join("");
   }
@@ -113,7 +113,7 @@
   function update() {
     const s = +shift.value;
     shiftVal.textContent = s;
-    plain.textContent = caesar(cipher, s);
+    plain.textContent = caesar(cipher, s); // 任意偏移都输出小写
   }
   shift.addEventListener("input", update);
   update();

@@ -64,22 +64,6 @@
 
 ---
 
-## 🌐 部署到 GitHub Pages
-
-想把它挂到网上（也可以直接发给朋友玩）：
-
-1. 新建一个 GitHub 仓库，比如叫 `orcus-station`。
-2. 把 `arg-orcus` 目录里的**内容**（不是外层文件夹）推上去。
-3. 打开仓库 **Settings → Pages**：
-   - Source 选 **Deploy from a branch**
-   - Branch 选 **main**，目录选 **/ (root)**
-   - 点 **Save**
-4. 等约 1 分钟，访问 `https://<你的用户名>.github.io/orcus-station/`。
-
-本地预览：直接双击 `index.html`，或在目录里跑 `npx serve .`。
-
----
-
 ## ⁉️ 常见问题
 
 - **听不到声音？** 浏览器需要用户先点击「播放」，这是浏览器的自动播放策略。

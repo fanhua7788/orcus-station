@@ -52,7 +52,51 @@
         </tbody>
       </table>
     </div>
-    <div class="hint">07-03 是全年最低温。那一行的其他读数也奇怪。<span class="dim">试试把整数部分换成字符。</span></div>
+    <div class="hint">07-03 是全年最低温。那一行的其他读数也奇怪。<span class="dim">看看下面的「读数解析终端」。</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">读数解析终端</div>
+    <div class="log" style="margin-bottom:14px;">
+      <div class="dim">07-03 那行的整数部分：风速 <b>67</b> · 气压后两位 <b>65</b> · 湿度 <b>77</b> · 噪声 <b>51</b>。</div>
+      <div class="dim">这四个数，各对应一个字符。把字符读出来，就是你要找的「几号机位」。</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="cyan">67 → <span class="green">C</span></span>
+      <span class="cyan">65 → <span class="green">A</span></span>
+      <span class="cyan">77 → <span class="green">M</span></span>
+      <span class="cyan">51 → <span class="green">3</span></span>
+      <span class="dim">= <b class="green big" style="letter-spacing:4px;">CAM 3</b></span>
+    </div>
+    <p style="margin-top:14px;">
+      <button id="decodeRow">▶ 让终端自动解析</button>
+      <span id="decodeMsg" class="dim" style="margin-left:12px;"></span>
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">气象观测记录 · 风暴前后</div>
+    <div class="log">
+      <div><span class="ts">07-01</span>气压开始缓慢下坠。奥科纳说这不像是普通天气过程，倒像「湖在换气」。</div>
+      <div><span class="ts">07-02</span>风向突变。风雪在东北角形成一个很深的低压，把温度拽下去好几度。</div>
+      <div><span class="ts">07-03 · 凌晨</span>全部读数异常。气温 -40.0，风速 67，湿度 77——这个组合不该同时出现。</div>
+      <div><span class="ts">07-03 · 03:33</span>声学与气象同时跳变。像是冰面下面，有什么东西「撞」了一下。</div>
+      <div><span class="ts">07-04</span>搜索暂停。暴风雪封了所有出口，能见度不足五米。我们困在这里了。</div>
+      <div><span class="ts">07-05</span>麦克默多站的联络开始断断续续。信号里夹杂着奇怪的重复。</div>
+      <div class="dim" style="margin-top:6px;">注：07-03 那四个异常读数，无论怎么算都不该是真实天气——它们像是「写」进去的。</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">逐夜 · 声学记录（07-01 至 07-05）</div>
+    <div class="log">
+      <div><span class="ts">07-01 · 夜</span>记录到首次规律敲击。间隔约 2.4 秒，反复四十余次。当班者标记为「湖冰收缩」。</div>
+      <div><span class="ts">07-02 · 夜</span>间隔缩短为 1.8 秒，出现长短区别。科瓦奇把它标为「疑似人声节奏」。</div>
+      <div><span class="ts">07-03 · 夜</span>敲击持续整夜，不再停歇。站内五人先后都听见了。有人关掉了扬声器，却没法关掉门外的风。</div>
+      <div><span class="ts">07-04 · 夜</span>记录到一次「应答」。值班员冲着喇叭说了句「谁在下面？」，几秒后，底下回应了三下。</div>
+      <div><span class="ts">07-05 · 夜</span>敲击与加密报文交替出现。值班员在纸上画下最后一行：<span class="red">「它在数我们。」</span></div>
+      <div class="dim" style="margin-top:8px;">你若把这段听下去，注意那个间隔——它越敲越快，像是在等谁回答。</div>
+    </div>
   </div>
 
   <div class="panel">
@@ -81,9 +125,9 @@
     <button class="hint-btn" data-level="1">轻微提示</button>
     <button class="hint-btn" data-level="2">明确提示</button>
     <button class="hint-btn" data-level="3">直接答案</button>
-    <div class="hint-text" data-level="1">07-03 那一行标红了，其他读数也奇怪。</div>
-    <div class="hint-text" data-level="2">风速 67、气压后两位 65、湿度 77、噪声 51 —— 这些数字是 ASCII 码。也可以点「分析波形」看声学记录。</div>
-    <div class="hint-text" data-level="3">67=C、65=A、77=M、51=3 → CAM3。去「摄像头」阵列看 3 号画面。</div>
+    <div class="hint-text" data-level="1">07-03 那一行标红了，四个整数读数有问题。</div>
+    <div class="hint-text" data-level="2">看上面的「读数解析终端」。四种读数 67 / 65 / 77 / 51 各对应一个字符，连起来就是机位号。</div>
+    <div class="hint-text" data-level="3">67=C、65=A、77=M、51=3 → CAM 3。去「摄像头」阵列看 3 号画面（/cameras.html）。</div>
   </div>
 
   <footer>
@@ -95,6 +139,22 @@
 <script src="assets/app.js"></script>
 <script>
   consoleEgg("最低温那一行，数字会说话。67 65 77 51。");
+
+  // 让终端自动解析四个读数
+  (function () {
+    var btn = document.getElementById("decodeRow");
+    var msg = document.getElementById("decodeMsg");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      btn.disabled = true;
+      msg.textContent = "解析中……";
+      setTimeout(function () {
+        msg.className = "msg ok";
+        msg.innerHTML = "解析完成：<b class='green'>CAM 3</b>。去「摄像头」看 3 号画面。";
+        btn.disabled = false;
+      }, 700);
+    });
+  })();
 
   const audio = document.getElementById("sig");
   const btn = document.getElementById("playBtn");

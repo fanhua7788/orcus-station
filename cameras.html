@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORCUS STATION // 摄像头阵列</title>
 <link rel="stylesheet" href="assets/style.css">
+<style>
+  .cam-reveal { position: relative; overflow: hidden; }
+  .cam-reveal img { transition: filter .3s; }
+  .cam-reveal.lit img { filter: brightness(2.2) contrast(1.5) saturate(0.6); }
+  .cam-reveal .mark {
+    position: absolute; left: 0; right: 0; bottom: 18%;
+    text-align: center; letter-spacing: 10px; font-size: 22px; font-weight: 700;
+    color: rgba(224,82,74,0.95); text-shadow: 0 0 10px rgba(224,82,74,0.8);
+    opacity: 0; transform: translateY(6px); transition: opacity .4s, transform .4s;
+    pointer-events: none;
+  }
+  .cam-reveal.lit .mark { opacity: 1; transform: translateY(0); }
+  .reveal-note { color: var(--dim); font-size: 12px; letter-spacing: 1px; }
+</style>
 </head>
 <body>
 <div class="scanlines"></div>
@@ -37,16 +51,17 @@
   <div class="panel">
     <div class="panel-title">线索</div>
     <div class="log">
-      <div>CAM-03 的画面里藏着东西。<span class="dim">下载原图，用 <a href="decoder.html" class="cyan">解码工具</a> 调高亮度 / 对比度。</span></div>
-      <div>调亮之后，你会看到下一站的代号。</div>
-      <div>进阶：用解码工具提取 LSB，得到第一块<span class="red">档案残片</span>。</div>
+      <div>昨天 03:33:33，CAM-03 拍到冰面异常。那帧画面里藏着一个代号。</div>
+      <div>点一下下方「🔦 提亮 CAM-03」——画面会亮起来，暗处有一个红字浮出来。</div>
+      <div>那个红字，就是你需要找到的下一站的代号（另一个页面）。</div>
+      <div class="dim" style="margin-top:6px;">提示：你还需要「档案残片」——它一到这个页面就自动帮你拿到了，不用额外操作。</div>
     </div>
   </div>
 
   <div class="panel">
     <div class="panel-title">档案残片</div>
     <div class="big">残片 #1：<span class="red">O</span></div>
-    <div class="dim" style="margin-top:6px;">共五块。下一站：调亮后看到的那个代号（/代号.html）。</div>
+    <div class="dim" style="margin-top:6px;">共五块。下一站：点亮 CAM-03 后看到的代号页面。</div>
   </div>
 
   <div class="cam-grid">
@@ -62,8 +77,13 @@
     </div>
     <div class="cam-card anomaly">
       <div class="cam-head"><span>CAM-03 ⚠</span><span class="red">03:33:33</span></div>
-      <img src="assets/img/cam3.png" alt="CAM-03 冰面异常" loading="lazy">
-      <a class="dl" href="assets/img/cam3.png" download>↓ 下载原图（藏了东西）</a>
+      <div class="cam-reveal" id="cam3rev">
+        <img src="assets/img/cam3.png" alt="CAM-03 冰面异常" loading="lazy">
+        <div class="mark">RADIO</div>
+      </div>
+      <button id="lightBtn" style="margin-top:10px; width:100%;">🔦 提亮 CAM-03</button>
+      <div class="reveal-note" id="revealNote" style="margin-top:8px;">记忆：那一晚 03:33:33 拍到的东西，就在这一帧里。</div>
+      <a class="dl" href="assets/img/cam3.png" download>↓ 下载原图</a>
     </div>
     <div class="cam-card">
       <div class="cam-head"><span>CAM-04</span><span>23:59:57</span></div>
@@ -82,14 +102,27 @@
     </div>
   </div>
 
+  <div class="panel">
+    <div class="panel-title">监控值守记录 · 最后一周</div>
+    <div class="log">
+      <div><span class="ts">CAM-01 · 外景雪原</span>白茫茫一片，能见度逐渐转差。大约从 07-03 凌晨起，画面边缘多了一道拉长的影子。</div>
+      <div><span class="ts">CAM-02 · 走廊</span>深夜的走廊通常空着。但 07-04 之后，有一台机位偶尔拍到灯自己闪了一下。</div>
+      <div><span class="ts">CAM-03 · 冰面异常</span>03:33:33。那帧画面让当班的人盯了很久。今晚，你也看见了红字。</div>
+      <div><span class="ts">CAM-04 · 实验室</span>桌面上的频谱图还摊开着，像有人刚刚离开。可是没有人在这个时间待在实验室。</div>
+      <div><span class="ts">CAM-05 · 宿舍</span>六张床，一张空了一年多。如今，又有一张常驻的床空了。灯还亮着。</div>
+      <div><span class="ts">CAM-06 · 发电机房</span>帕克总爱坐在那堆机器中间。他看着断路器，像是在等哪个突然断开。</div>
+      <div class="dim" style="margin-top:8px;">整座站，只有一台机位的时钟走得和别人不一样。你猜是哪一台？</div>
+    </div>
+  </div>
+
   <div class="hint-box">
     <div class="hint-head">💡 卡住了？点击查看提示</div>
     <button class="hint-btn" data-level="1">轻微提示</button>
     <button class="hint-btn" data-level="2">明确提示</button>
     <button class="hint-btn" data-level="3">直接答案</button>
     <div class="hint-text" data-level="1">3 号画面昨晚 03:33:33 异常。</div>
-    <div class="hint-text" data-level="2">下载 cam3.png 原图，用「解码工具」点「一键色阶增强」，左下角会显出一个单词；「提取 LSB」得到残片。</div>
-    <div class="hint-text" data-level="3">那个单词是 RADIO → 访问 /radio.html。残片 #1 = O。</div>
+    <div class="hint-text" data-level="2">点 CAM-03 下方「🔦 提亮」按钮。画面会变亮，暗处浮出一个红字代号。</div>
+    <div class="hint-text" data-level="3">红字代号是 RADIO → 访问 /radio.html。残片 #1 = O。</div>
   </div>
 
   <footer>
@@ -100,12 +133,27 @@
 
 <script src="assets/app.js"></script>
 <script>
-  consoleEgg("CAM-03。左下角。亮一点。");
+  consoleEgg("CAM-03。点「提亮」，看那行红字。");
   collectShard("O"); // 残片 #1
-  // 让玩家点击异常画面时给个提示
-  document.querySelector(".cam-card.anomaly img").addEventListener("click", function () {
-    alert("试试：下载原图 → 在图片编辑器里把亮度/对比度拉满。");
-  });
+
+  // 页面内提亮 CAM-03，显示隐藏的红字代号
+  (function () {
+    var btn = document.getElementById("lightBtn");
+    var rev = document.getElementById("cam3rev");
+    var note = document.getElementById("revealNote");
+    if (!btn || !rev) return;
+    var lit = false;
+    btn.addEventListener("click", function () {
+      lit = !lit;
+      rev.classList.toggle("lit", lit);
+      btn.textContent = lit ? "🌙 恢复原样" : "🔦 提亮 CAM-03";
+      if (lit) {
+        note.innerHTML = "红字代号：<b class='red'>RADIO</b> → 访问 <a href='radio.html' class='cyan'>/radio.html</a>。";
+      } else {
+        note.innerHTML = "记忆：那一晚 03:33:33 拍到的东西，就在这一帧里。";
+      }
+    });
+  })();
 </script>
 </body>
 </html>

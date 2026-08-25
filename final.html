@@ -58,6 +58,29 @@
     </div>
 
     <div class="panel">
+      <div class="panel-title">第 7 号档案 · 完整说明</div>
+      <div class="log">
+        <div>这份档案不是技术资料。它是一个决定：有人从一开始就决定，把奥库斯站的真正用途藏在密码后面。</div>
+        <div>那口「深渊湖」底下，到底敲的是什么，档案里没有写。只写了一句被反复批注的话：</div>
+        <div class="cyan" style="margin:10px 0;">「它不只记录声音。它在等一个回应。」</div>
+        <div>科瓦奇听见了。所以他下去了。现在，轮到你站在终端前面——</div>
+        <div class="red" style="margin-top:6px;">如果你把名字输进去，它就会学着敲你。</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">致第一个读到这份档案的人</div>
+      <div class="log">
+        <div>如果你还在继续读，说明你已经走了很远——从那条被涂改的日志，一路走到这里。</div>
+        <div>我只是一个守在终端前的普通值班员。最初，我以为这只是一次例行的设备故障。后来我发现，我真正守着的，不是设备，是这整座站地下那道看不见的缝。</div>
+        <div>我把能写的东西都留在各个页面上了：气象记录里藏着我们去过的每一个地方，职员档案里是那些一起熬过极夜的同伴，通讯记录里是我们最后的声音。</div>
+        <div>科瓦奇走之前对我说，他听见那东西在叫他名字。我到现在都不确定，那是幻觉，还是真的。</div>
+        <div class="red" style="margin-top:6px;">——可现在我听见它在敲你的名字了。所以我把这份档案留给你，是想让你自己决定：要不要回应。</div>
+        <div class="faint" style="margin-top:6px;">如果你决定不回应，那就把它关掉，当作什么都没发生过。你已经知道该怎么做了。</div>
+      </div>
+    </div>
+
+    <div class="panel">
       <div class="panel-title">音频分析终端</div>
       <div class="log" style="margin-bottom:14px;">
         <div class="dim">输入你的名字。终端将按档案记录的节奏模拟冰层下方的敲击。</div>
@@ -80,6 +103,15 @@
       <div class="big red">不要回应。</div>
       <div class="dim" style="margin-top:10px;">关掉这个页面。现在。</div>
       <div class="faint" style="margin-top:6px;">—— 不然它会知道，你已经听见了。</div>
+    </div>
+
+    <div class="panel reveal" id="appendix">
+      <div class="panel-title">附录 · 他们后来怎样</div>
+      <div class="log">
+        <div>如果你想弄清楚，站里剩下的五个人后来都说了些什么，</div>
+        <div>去看<a href="testimony.html" class="cyan">幸存者证词</a>。—— 那份证词，官方说可以结案了。</div>
+        <div class="faint" style="margin-top:6px;">但他们五个人说的，和档案里写的，一模一样。</div>
+      </div>
     </div>
 
     <footer>
@@ -138,6 +170,8 @@
 
         setTimeout(function () {
           finale.classList.add("show");
+          var appendix = document.getElementById("appendix");
+          if (appendix) appendix.classList.add("show");
           document.querySelector(".noise").style.opacity = "0.14";
           document.body.classList.add("glitch");
         }, 1800);

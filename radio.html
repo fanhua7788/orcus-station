@@ -44,34 +44,54 @@
   <p class="sub">无线电日志 · 与麦克默多站的最后联络 · <span class="red">部分报文已加密</span></p>
 
   <div class="panel">
-    <div class="panel-title">VHF 频道日志</div>
+    <div class="panel-title">VHF 频道日志 · 与麦克默多站</div>
     <div class="log">
-      <div><span class="ts">[21:14]</span>奥库斯站呼叫麦克默多站，信号正常。</div>
-      <div><span class="ts">[21:30]</span>收到气象更新：暴风雪预计持续 48 小时。</div>
-      <div><span class="ts">[22:02]</span>麦克默多站：请确认人员状态。</div>
-      <div><span class="ts">[22:15]</span>奥库斯站：<span class="amber">A·科瓦奇未返回。重复，未返回。</span></div>
-      <div><span class="ts">[22:40]</span>频道切换至备用频率。</div>
-      <div><span class="ts">[23:03]</span>收到加密报文：<span class="cyan">SHUVRQQHO</span></div>
-      <div><span class="ts">[23:11]</span>报文重复：<span class="cyan">SHUVRQQHO SHUVRQQHO</span></div>
-      <div><span class="ts">[23:59]</span><span class="red">通讯中断。</span></div>
+      <div><span class="ts">[07-02 · 09:00]</span>奥库斯站呼叫麦克默多站，例行点名，信号正常。</div>
+      <div><span class="ts">[07-02 · 09:12]</span>麦克默多站：收到，奥库斯。你们那儿的天气怎么样？</div>
+      <div><span class="ts">[07-02 · 09:14]</span>奥库斯站：还行。就是下面那口「湖」今天响得厉害。</div>
+      <div><span class="ts">[07-02 · 09:16]</span>麦克默多站：……你们又提那个了。别理它不就完了。</div>
+      <div><span class="ts">[07-03 · 06:30]</span>麦克默多站：请确认人员状态。奥库斯站？</div>
+      <div><span class="ts">[07-03 · 06:45]</span>奥库斯站：<span class="red">A·科瓦奇未返回。重复，未返回。</span></div>
+      <div><span class="ts">[07-03 · 06:47]</span>麦克默多站：他昨晚几点出去的？</div>
+      <div><span class="ts">[07-03 · 06:50]</span>奥库斯站：05:50。他说去听清楚。带了移动记录仪。之后再没人见过他。</div>
+      <div><span class="ts">[07-03 · 07:05]</span>麦克默多站：风雪太大，没法派救援。你们先从内部核实。别再往外走了。</div>
+      <div><span class="ts">[07-03 · 21:00]</span>奥库斯站：我们把站里全翻遍了。他不在。主电源开始不稳。</div>
+      <div><span class="ts">[07-04 · 08:00]</span>麦克默多站：我们已经把你们标记为「单边联系」。有消息随时喊。</div>
+      <div><span class="ts">[07-04 · 22:40]</span>频道切换至备用频率。信号开始往下掉。</div>
+      <div><span class="ts">[07-05 · 23:03]</span>收到加密报文：<span class="cyan">SHUVRQQHO</span></div>
+      <div><span class="ts">[07-05 · 23:11]</span>报文重复：<span class="cyan">SHUVRQQHO SHUVRQQHO</span></div>
+      <div><span class="ts">[07-05 · 23:59]</span><span class="red">通讯中断。</span></div>
+      <div class="dim" style="margin-top:6px;">值班员在日志边缘潦草地写了一个「-3」。</div>
     </div>
-    <div class="hint">值班员在日志边缘潦草地写了一个「-3」。</div>
   </div>
 
   <div class="panel">
     <div class="panel-title">报文解密器</div>
     <div class="log" style="margin-bottom:14px;">
-      <div class="dim">拖动偏移量，直到密文变成有意义的单词。（凯撒密码）</div>
+      <div class="dim">这是凯撒密码：加密时每个字母被「挪」了若干位。把偏移滑块挪到正确的数值，密文就会变回有意义的单词。</div>
+      <div class="dim">值班员留下的数字「-3」，就是正确的偏移量。</div>
     </div>
     <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
       <span class="dim">偏移</span>
       <input type="range" id="shift" min="-25" max="25" value="0" style="width:220px;">
       <span class="cyan" id="shiftVal" style="min-width:40px;">0</span>
+      <button id="autoDecode" style="margin-left:6px;">⚡ 自动破解</button>
     </div>
     <p style="margin-top:14px;">
       <span class="dim">密文：</span><span class="cyan">SHUVRQQHO</span>
       <span class="dim" style="margin-left:20px;">明文：</span><span class="green big" id="plain" style="font-size:18px;">SHUVRQQHO</span>
     </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">通讯员手记</div>
+    <div class="log">
+      <div>那个加密报文不是从奥库斯站发出的正常通讯。它更像……一个应答。</div>
+      <div>科瓦奇失踪后，我们反复播放那段敲击。听着听着，有人反应过来——</div>
+      <div class="red" style="margin:10px 0;">那下面的东西，在学我们说话。</div>
+      <div>它用摩尔斯，把「SHUVRQQHO」敲了一遍又一遍。值班员数到第三遍就停了手。</div>
+      <div class="dim" style="margin-top:6px;">在这片冰原上，通讯从来不是单向的。你发出去什么，它就会回你什么。</div>
+    </div>
   </div>
 
   <div class="panel">
@@ -86,7 +106,7 @@
     <button class="hint-btn" data-level="2">明确提示</button>
     <button class="hint-btn" data-level="3">直接答案</button>
     <div class="hint-text" data-level="1">值班员在日志边缘写了个「-3」。</div>
-    <div class="hint-text" data-level="2">这是凯撒密码：把密文每个字母往前挪 3 位（偏移 -3）。</div>
+    <div class="hint-text" data-level="2">这是凯撒密码：把密文每个字母往前挪 3 位（偏移 -3）。也可以点「⚡ 自动破解」。</div>
     <div class="hint-text" data-level="3">SHUVRQQHO → personnel。去 /personnel.html。残片 #2 = R。</div>
   </div>
 
@@ -117,6 +137,17 @@
   }
   shift.addEventListener("input", update);
   update();
+
+  // 自动破解：直接设置正确的偏移 -3
+  const autoBtn = document.getElementById("autoDecode");
+  if (autoBtn) {
+    autoBtn.addEventListener("click", function () {
+      shift.value = -3;
+      update();
+      autoBtn.textContent = "✓ 已破解";
+      autoBtn.disabled = true;
+    });
+  }
 </script>
 <script>
   initBoot({

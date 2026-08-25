@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 科瓦奇的声学日志</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .log-entry { border-left: 2px solid var(--line2); padding-left: 14px; margin: 14px 0; }
+  .log-entry .date { color: var(--cyan); letter-spacing: 2px; font-size: 12px; }
+  .log-entry .body { margin-top: 4px; line-height: 1.9; }
+  .warn { color: var(--red); }
+</style>
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>档案 <b class="amber">研究日志</b></span>
+  <span>作者 <b>A·科瓦奇</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>A·科瓦奇 · 声学研究日志</h1>
+  <p class="sub">声学工程师 · 工号 ORC-7341 · 驻站期间手动转录 · <span class="red">末篇时间：失踪当日</span></p>
+
+  <div class="panel">
+    <div class="panel-title">发现 · 第一天</div>
+    <div class="log">
+      <div>调取 07 号传感器的数据时，我没敢立刻相信自己的眼睛。</div>
+      <div>它不是一个「噪声」，是一串有间隔的敲击。短、短、长、短……我用笔在纸上描了一遍，越描越整齐。</div>
+      <div class="dim" style="margin-top:6px;">我把这一段误当成湖冰的自然收缩。但我心里那根弦，已经绷起来了。</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">逐日转录 · 拷录自科瓦奇的手写本</div>
+    <div class="log-entry">
+      <div class="date">· 07-01</div>
+      <div class="body">敲击频率稳定。我把莫尔斯对照表拿出来，想试着翻。翻到第三个词我就停了——它像是在学我们呼叫站的呼号。我告诉自己，这只是巧合。</div>
+    </div>
+    <div class="log-entry">
+      <div class="date">· 07-02</div>
+      <div class="body">林德伯格让我写个正式报告。我写了一半就删掉重写。报告里我不能说「它可能有意识」。可我真的这么觉得。它就活在冰下面四十米，一下一下，等我们回应。</div>
+    </div>
+    <div class="log-entry">
+      <div class="date">· 07-02 · 夜</div>
+      <div class="body">我把波形调成了可视。那些长音短音自动排成四个字符：<span class="cyan">S H U V R Q Q H O</span>。看着像乱码，可我知道这不是乱码。它是有意为之的。</div>
+    </div>
+    <div class="log-entry">
+      <div class="date">· 07-03 · 04:00</div>
+      <div class="body">CAM-03 凌晨 03:33:33 拍到冰面异常。那不是冰裂。裂冰不会有一道那么齐的缝。那像是……有东西在冰下面，贴着冰面往上「看」。</div>
+    </div>
+    <div class="log-entry">
+      <div class="date">· 07-03 · 05:40</div>
+      <div class="body">我做了决定。我要下去。带上移动记录仪，把它敲的每一段都录下来。如果真有人叫我名字，我得亲耳听一次，才知道是不是幻觉。</div>
+    </div>
+    <div class="log-entry">
+      <div class="date">· 07-03 · 05:50</div>
+      <div class="body">最后一行。字迹开始抖：</div>
+      <div class="warn" style="margin:8px 0;">「它一直在叫我。它叫的不是我的工号。它叫的是我名字里，那个我从来没有告诉过它的字。」</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">此后</div>
+    <div class="log">
+      <div class="red">科瓦奇于 07-03 05:50 离开站体，前往冰面。此后失踪。</div>
+      <div>那台移动记录仪后来在冰面边缘被找到，躺在洞口旁边。存储卡被人拔走了，只剩一段空白音频。</div>
+      <div class="dim" style="margin-top:6px;">如果那下面的东西真的学会了摩尔斯——那么它在站里敲的那几句，可能还差最后一个词。</div>
+      <div class="faint" style="margin-top:10px;">（回到 <a href="personnel.html" class="cyan">员工档案</a> 继续。)（他失踪前最后启动的设备，是 <a href="power.html" class="cyan">电源管理</a>。）</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · acoustic log</span>
+    <span class="faint">subject: A·KOVACH · ORC-7341</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("它学会的是你名字里，那个你没告诉过任何人的字。");
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.kovach",
+  "lines": [
+    "[ 研究日志载入中 ]",
+    "> 来源：A·科瓦奇 · 手写转录本",
+    "> 工号：ORC-7341 · 声学工程师",
+    "> 末篇同步时间：07-03 05:50",
+    "> 一篇越写越短、越写越抖的日记。"
+  ],
+  "button": "▶ 阅读日志",
+  "hint": "RESEARCH LOG RESTORED",
+  "effect": "crack",
+  "tone": 61
+});
+</script>
+</body>
+</html>

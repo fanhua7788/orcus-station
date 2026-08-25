@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 幸存者证词</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .statement { border: 1px solid var(--line); padding: 16px 18px; margin: 16px 0; }
+  .statement .who { color: var(--cyan); letter-spacing: 1px; font-size: 13px; }
+  .statement .who span { color: var(--dim); font-size: 12px; }
+  .statement p { line-height: 1.9; margin: 8px 0 0; }
+  .classified { color: var(--red); font-size: 12px; letter-spacing: 2px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>档案 <b class="amber">证词</b></span>
+  <span>状态 <b class="bad">封存</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>幸存者证词 · 封存</h1>
+  <p class="sub">第 7 号档案附录 · 五名在站人员的后续陈述 · <span class="red">官方未采信</span></p>
+
+  <div class="panel">
+    <div class="panel-title">前言</div>
+    <div class="log">
+      <div>下列证词由撤离行动完成前，从奥库斯站五名留守人员处逐一口述记录。</div>
+      <div>五人证词彼此吻合，却无一人能解释他们目睹之事。经办人批注：<span class="red">「建议视为集体应激反应。建议结案。」</span></div>
+      <div class="dim" style="margin-top:6px;">但你在第 7 号档案里读到的那些——它们和证词对得上。没有人能对得上，除了冰层下面的东西。</div>
+    </div>
+  </div>
+
+  <div class="statement">
+    <div class="who">M·林德伯格 · 站长 <span>· ORC-0192</span></div>
+    <p>「我第一次听，没当回事。第三次听，我知道那不是冰。我活这么久，从来不信怪力乱神，可我信我那台频谱仪。它告诉我下面有结构，有间隔，有节奏——那就是有东西在敲。我自己不肯承认，因为我一旦承认，我就得承认我放任科瓦奇下去了。」</p>
+    <div class="classified">——以上内容与第 7 号档案结论一致</div>
+  </div>
+
+  <div class="statement">
+    <div class="who">J·奥科纳 · 气象学家 <span>· ORC-2208</span></div>
+    <p>「07-03 那组数据，我调了十几遍。它不该那样。可它就在那儿，像有人把数字填进去的。我本来想坚持科学解释，直到我听见那段报文的波形。那和我们站里敲的，一模一样。」</p>
+    <div class="classified">——技术附件确认：报文与低频敲击同源</div>
+  </div>
+
+  <div class="statement">
+    <div class="who">R·帕克 · 机械师 <span>· ORC-5107</span></div>
+    <p>「你们爱信不信。那台断路器，不是自己断的。我盯了一整夜，它就那么在没人碰的时候，啪，断了。下面是活的。我修了一辈子机器，这块冰它不像机器——它像在故意吓唬你。」</p>
+    <div class="classified">——配电记录无人工操作痕迹</div>
+  </div>
+
+  <div class="statement">
+    <div class="who">S·伊藤 · 医师 <span>· ORC-6640</span></div>
+    <p>「科瓦奇走之前那几天，心率和血压都异常。不是寒冷造成的，是恐惧。他嘴上说没事。可我读过他的波段——他听到的东西，让他整个人都在颤。如果那真的是人，他不会怕成那样。」</p>
+    <div class="classified">——医学记录：失眠、心率持续偏高</div>
+  </div>
+
+  <div class="statement">
+    <div class="who">D·维兰德 · 厨师 <span>· ORC-8893</span></div>
+    <p>「我不懂那些仪器。我只知道那桶黄油被挪了位置，上面留了一道干净的压痕，像有人———不，我不知道像什么。我不该懂那些。我宁愿相信是我记错了。」</p>
+    <div class="classified">——厨房记录：未见第三方活动迹象</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">最后的记录</div>
+    <div class="log">
+      <div>撤离直升机抵达前夜，站内最后一次广播被录了下来。</div>
+      <div>没有主持词。只有一段持续的低频敲击，节奏稳定，间隔均匀。</div>
+      <div class="dim" style="margin-top:6px;">有人用摩尔斯把它翻译了出来。那句话只有几个字母，经办人看见之后，选择不再往上写。</div>
+      <div class="red" style="margin-top:10px;">—— 不要回应。</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · survivor statements</span>
+    <span class="faint">file: ORC-TES-07 · SEALED</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("五个人说了同一件事：那下面有东西。");
+</script>
+</body>
+</html>

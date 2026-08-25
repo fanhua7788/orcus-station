@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORCUS STATION // 补全档案 · 建站勘察</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .stamp { border: 1px solid var(--red); color: var(--red); padding: 4px 10px; font-size: 11px; letter-spacing: 2px; display: inline-block; margin-top: 6px; }
+  .sign { color: var(--dim); font-size: 12px; letter-spacing: 1px; margin-top: 10px; }
+</style>
+</head>
+<body class="locked">
+<div id="boot">
+  <canvas id="bootCanvas"></canvas>
+  <div class="boot-center">
+    <div class="boot-logo" id="bootLogo"></div>
+    <div class="boot-term" id="bootTerm"></div>
+    <button id="bootEnter" class="boot-btn" style="display:none;"></button>
+    <div class="boot-hint" id="bootHint" style="display:none;"></div>
+  </div>
+</div>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="noise"></div>
+
+<header class="topbar">
+  <span class="brand">ORCUS<span class="dot">●</span>STATION</span>
+  <nav class="nav">
+    <a href="index.html">主控台</a>
+    <a href="climate.html">环境监测</a>
+    <a href="cameras.html">摄像头</a>
+    <a href="vault.html">档案库</a>
+    <a href="decoder.html">解码工具</a>
+  </nav>
+</header>
+
+<div class="statusbar">
+  <span>终端 <b>07</b></span>
+  <span>档案 <b class="amber">补全档案</b></span>
+  <span>级别 <b>内部</b></span>
+  <span>系统时间 <b>00:00:00</b></span>
+  <span>残片 <span class="progress" data-progress></span></span>
+</div>
+
+<main class="wrap">
+  <h1>补全档案 · 建站勘察记录</h1>
+  <p class="sub">文档编号 ORC-SRV-014 · 机密等级：内部 · <span class="red">部分章节已缺失</span></p>
+
+  <div class="panel">
+    <div class="panel-title">为什么建在「深渊湖」上</div>
+    <div class="log">
+      <div>本文档是奥库斯站建站年代最早的一批文件之一。开篇第一行是一段手写的批注：</div>
+      <div class="cyan" style="margin:10px 0;">「这里不像其它选址。其它点是研究冰，只有这里——冰下面有一座活着的湖。我们要研究的不是冰，是湖。」</div>
+      <div>勘察队在放射测量时发现，这个被称作「深渊湖」的冰下湖面积比预期大得多，且湖底地形极不规则，存在一条不断向深处延伸的裂隙。</div>
+      <div>最让人在意的不是湖本身，而是它「发声」。那一年的地质雷达读取到一组持续、规律的低频反射，来源无法用任何已知地层结构解释。</div>
+      <div>于是站点被定在这里。选址标准上写着四个字：<span class="red">「适合监听。」</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">声学阵列 · 07 号传感器</div>
+    <div class="log">
+      <div>站内布设了覆盖冰面的声学阵列。07 号传感器所在的位置，正对那条湖底裂隙的正上方。</div>
+      <div>巡测人员记录过一段话：</div>
+      <div class="dim" style="margin:10px 0; border-left:2px solid var(--line2); padding-left:10px;">「07 号听得最难。它记录的东西有间隙、有长短，像在被逐字念出来。我把波形打印出来看了一眼，后背全湿了。那东西是有结构的。」</div>
+      <div>—— 这份记录在此处缺页。下一行只剩一行潦草的字：</div>
+      <div class="red" style="margin:10px 0;">「千万别去数它敲了几下。」</div>
+    </div>
+    <div class="stamp">勘测员批注：以下内容未获授权存档</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">站长补充说明</div>
+    <div class="log">
+      <div>补全档案的最后一页，是现任站长 林德伯格 的手迹。他写得很慢，很多句子被涂掉又重写：</div>
+      <div class="dim" style="margin:10px 0; border-left:2px solid var(--line2); padding-left:10px;">「我们不知道那是什么。我们只知道它一直在下面，用同一种节奏，一遍一遍地。科瓦奇走之前跟我说，他觉得那下面有谁在等。」</div>
+      <div>「本来这只是一次常规轮换。现在，站里只剩五个人。如果有人在读这份档案——你来的那条路，就是从它开始响的那天走过来的。」</div>
+      <div class="sign">—— M·林德伯格 · 站长 · 驻站最后一日</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">接续你的调查</div>
+    <div class="log">
+      <div>补全档案到此为止。你已经知道这座站在「听」什么了。</div>
+      <div>想继续，回到 <a href="index.html" class="cyan">主控台</a>，从那条被涂改的日志出发。</div>
+      <div class="faint">提示：把你看到的线索记下来。下一站是「环境监测」。</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>ORCUS STATION · supplementary dossier</span>
+    <span class="faint">doc: ORC-SRV-014</span>
+  </footer>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+  consoleEgg("他们不是第一批。湖底那道裂隙，早就有人盯着了。");
+</script>
+<script>
+  initBoot({
+  "key": "orcus.boot.survey",
+  "lines": [
+    "[ 补全档案加载中 ]",
+    "> 正在访问：ORC-SRV-014 建站勘察记录",
+    "> 权限……内部",
+    "> 解密进度：██████████ 100%",
+    "> 翻到第一页，你就知道他们为什么要在冰上听。"
+  ],
+  "button": "▶ 打开档案",
+  "hint": "SURVEY RECORD DECRYPTED",
+  "effect": "static",
+  "tone": 73
+});
+</script>
+</body>
+</html>
